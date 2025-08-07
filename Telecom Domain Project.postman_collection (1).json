@@ -1,0 +1,469 @@
+{
+	"info": {
+		"_postman_id": "e3344775-32b0-4559-8973-94eeb6688103",
+		"name": "Telecom Domain Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45596769",
+		"_collection_link": "https://neha-1205497.postman.co/workspace/Neha's-Workspace~7b5ad584-ae11-4bd1-8b55-aaf3154b4e31/collection/45596769-e3344775-32b0-4559-8973-94eeb6688103?action=share&source=collection_link&creator=45596769"
+	},
+	"item": [
+		{
+			"name": "Add New User",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"var  dtime = new Date().getTime();\r",
+							"var newEmail = \"digi\"+ dtime +\"@yopmail.com\"\r",
+							"\r",
+							"pm.environment.set(\"emailId\",newEmail)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"pm.test(\"Status code is 201\", function () {\r",
+							"   pm.expect(pm.response.code).to.eql(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status message is created\", ()=>{\r",
+							"pm.expect(pm.response.status).to.eql(\"Created\")\r",
+							"})\r",
+							"\r",
+							"let res = pm.response.json().token\r",
+							"pm.environment.set(\"usertoken\", res)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"firstName\": \"James\",\r\n\"lastName\": \"Mathew\",\r\n\"email\": \"{{emailId}}\", \r\n\"password\": \"myPassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bUrl}}/users",
+					"host": [
+						"{{bUrl}}"
+					],
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get user Profile",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.expect(pm.response.code).to.eql(200);\r",
+							"})\r",
+							"\r",
+							"pm.test(\"Status message is OK\", function () {\r",
+							"    pm.expect(pm.response.status).to.eql(\"OK\");\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{usertoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{bUrl}}/users/me",
+					"host": [
+						"{{bUrl}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", ()=>{\r",
+							"    pm.expect(pm.response.code).to.eql(200)\r",
+							"\r",
+							"})\r",
+							"pm.test(\"Status message is ok\", ()=>{\r",
+							"    pm.expect(pm.response.status).to.eql(\"OK\")\r",
+							"\r",
+							"})\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{usertoken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"firstName\": \"Cris\", \r\n\"lastName\": \"Donald\",\r\n\"email\": \"{{emailId}}\",\r\n\"password\": \"myNewPassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bUrl}}/users/me",
+					"host": [
+						"{{bUrl}}"
+					],
+					"path": [
+						"users",
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Log In User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var logToken = pm.response.json().token\r",
+							"console.log(logToken)\r",
+							"\r",
+							"pm.environment.set(\"LoginToken\",logToken)\r",
+							"\r",
+							"pm.test(\"Status code is 200\", function () {\r",
+							"   pm.expect(pm.response.code).to.eql(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status message is OK\", function () {\r",
+							"   pm.expect(pm.response.status).to.eql(\"OK\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"email\": \"{{emailId}}\",\r\n\"password\": \"myNewPassword\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bUrl}}/users/login",
+					"host": [
+						"{{bUrl}}"
+					],
+					"path": [
+						"users",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Contact",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"   pm.expect(pm.response.code).to.eql(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status message id created\", function () {\r",
+							"    pm.expect(pm.response.status).to.eql(\"Created\");\r",
+							"});\r",
+							"\r",
+							"var res=pm.response.json()._id\r",
+							"pm.environment.set(\"contactId\", res)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{LoginToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"firstName\": \"Dona\",\r\n\"lastName\": \"Glory\",\r\n\"birthdate\": \"1990-01-01\", \"email\": \"donaglory@fake.com\", \"phone\": \"786632699\",\r\n\"street1\": \"1 Main St.\", \"street2\": \"Apartment E\", \"city\": \"New York\",\r\n\"stateProvince\": \"KS\", \"postalCode\": \"20345\", \"country\": \"USA\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bUrl}}/contacts",
+					"host": [
+						"{{bUrl}}"
+					],
+					"path": [
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Contact List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",()=>{\r",
+							"    pm.expect(pm.response.code).is.eql(200)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status message is Ok\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql(\"OK\")\r",
+							"});\r",
+							"\r",
+							"var res = pm.response.json()\r",
+							"console.log(res)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{LoginToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{bUrl}}/contacts",
+					"host": [
+						"{{bUrl}}"
+					],
+					"path": [
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Contact",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\",()=>{\r",
+							"    pm.expect(pm.response.code).is.eql(200)\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Status message is Ok\",()=>{\r",
+							"    pm.expect(pm.response.status).to.eql(\"OK\")\r",
+							"});\r",
+							"\r",
+							"var res = pm.response.json()\r",
+							"console.log(res)"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{LoginToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{bUrl}}/contacts",
+					"host": [
+						"{{bUrl}}"
+					],
+					"path": [
+						"contacts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Contact",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{LoginToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"firstName\": \"Amy\", \r\n\"lastName\": \"Miller\",\r\n\"birthdate\": \"1992-02-02\",\r\n\"email\": \"amiller@fake.com\", \"phone\": \"8005554242\",\r\n\"street1\": \"13 School St.\", \"street2\": \"Apt. 5\",\r\n\"city\": \"Washington\", \"stateProvince\": \"QC\",\r\n\"postalCode\": \"A1A1A1\", \"country\": \"Canada\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bUrl}}/contacts/",
+					"host": [
+						"{{bUrl}}"
+					],
+					"path": [
+						"contacts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Contact Patch",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{LoginToken}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\"firstName\": \"Rozy\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{bUrl}}/contacts/",
+					"host": [
+						"{{bUrl}}"
+					],
+					"path": [
+						"contacts",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout User",
+			"request": {
+				"method": "GET",
+				"header": []
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "bUrl",
+			"value": "https://thinking-tester-contact-list.herokuapp.com",
+			"type": "default"
+		}
+	]
+}
